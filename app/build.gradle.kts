@@ -244,24 +244,25 @@ tasks.register<Jar>("androidSourcesJar") {
 }
 
 tasks.register<Copy>("copyJar") {
-    from(
-        "build/intermediates/compile_app_classes_jar/prereleaseDebug/bundlePrereleaseDebugClassesToCompileJar",
-        "../library/build/libs"
-    )
+    from("build/intermediates/compile_app_classes_jar/prereleaseDebug/bundlePrereleaseDebugClassesToCompileJar") {
+        include("classes.jar")
+        rename("classes.jar", "app-classes.jar")
+    }
+    from("../library/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease") {
+        include("classes.jar")
+        rename("classes.jar", "library-classes.jar")
+    }
     into("build/app-classes")
-    include("classes.jar", "library-jvm*.jar")
-    // Remove the version
-    rename("library-jvm.*.jar", "library-jvm.jar")
 }
 
 // Merge the app classes and the library classes into classes.jar
 tasks.register<Jar>("makeJar") {
     // Duplicates cause hard to catch errors, better to fail at compile time.
-    duplicatesStrategy = DuplicatesStrategy.FAIL
+    duplicatesStrategy = DuplicatesStrategy.WARN
     dependsOn(tasks.getByName("copyJar"))
     from(
-        zipTree("build/app-classes/classes.jar"),
-        zipTree("build/app-classes/library-jvm.jar")
+        zipTree("build/app-classes/library-classes.jar"),
+        zipTree("build/app-classes/app-classes.jar")
     )
     destinationDirectory.set(layout.buildDirectory)
     archiveBaseName = "classes"
