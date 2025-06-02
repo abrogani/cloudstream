@@ -17,7 +17,9 @@ val javaTarget = JvmTarget.fromTarget(libs.versions.jvmTarget.get())
 
 kotlin {
     version = "1.0.0"
-    androidTarget()
+    androidTarget {
+        publishLibraryVariants("release")
+    }
     jvm()
 
     compilerOptions {
