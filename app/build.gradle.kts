@@ -249,7 +249,7 @@ tasks.register<Copy>("copyJar") {
         include("classes.jar")
         rename("classes.jar", "app-classes.jar")
     }
-    from("../library/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease") {
+    from("../library/build/intermediates/compile_library_classes_jar/androidMain/bundleAndroidMainClassesToCompileJar") {
         include("classes.jar")
         rename("classes.jar", "library-classes.jar")
     }
